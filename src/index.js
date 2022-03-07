@@ -32,18 +32,32 @@ const gridHelper = new THREE.GridHelper( size, divisions );
 //scene.add( gridHelper );
 
 const loader = new GLTFLoader();
-var model;
-var xpos = 0;
 
-loader.load( 'dist/ufo.glb', function ( gltf )
+const copies = [];
+var model;
+
+
+loader.load( 'dist/jupiter.glb', function ( gltf )
 {
     model = gltf.scene;  // model 3D object is loaded
     model.position.y = 0;
     model.position.z = 0;
     model.position.x = 0;
+    model.name = "jupiter";
     scene.add(model);
-} );
+}
+);
 
+console.log(scene);
+var parent = scene.getObjectByName("jupiter", true);
+console.log(parent);
+
+for(let i = 0; i < 10; i++)
+{
+  copies[i] = parent.clone();
+  scene.add(copies[i]);
+}
+   
 const sloader = new THREE.CubeTextureLoader();
 
 const stexture = sloader.load([
@@ -57,15 +71,41 @@ const stexture = sloader.load([
 
 scene.background = stexture;
 animate();
-console.log(stexture);
+
+
+function create_copies(number, parent)
+{
+  let copies = new Array();
+
+  for(let i = 0; i < number; i++)
+  {
+    copies[i] = parent.clone();
+    scene.add(copies[i]);
+  }
+  return (copies);
+}
+
+
+let turnFraction = 0.5;
+let numPoints = 10;
+
+
+for (let i = 0; i < numPoints; i++)
+{
+  let dst = i / (numPoints - 1);
+  let angle = 2 * Math.PI * turnFraction * i;
+  
+  copies[i].position.x = dst * Math.cos(angle);
+  copies[i].position.y = dst * Math.sin(angle);
+}
 
 
 function animate() {
     requestAnimationFrame( animate );
     renderer.render( scene, camera );
-    model.position.x = Math.sin(xpos += 0.01) * 15;
-    model.position.z = Math.cos(xpos) * 15;
-    model.position.y = Math.sin(xpos * 4);
+    // model.position.x = Math.sin(xpos += 0.01) * 15;
+    // model.position.z = Math.cos(xpos) * 15;
+    //model.position.y = Math.sin(xpos * 4);
 };
 
 
