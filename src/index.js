@@ -33,7 +33,7 @@ const gridHelper = new THREE.GridHelper( size, divisions );
 
 const loader = new GLTFLoader();
 
-const copies = [];
+var copies = new Array(10);
 var model;
 
 
@@ -48,15 +48,7 @@ loader.load( 'dist/jupiter.glb', function ( gltf )
 }
 );
 
-console.log(scene);
-var parent = scene.getObjectByName("jupiter", true);
-console.log(parent);
-
-for(let i = 0; i < 10; i++)
-{
-  copies[i] = parent.clone();
-  scene.add(copies[i]);
-}
+//console.log(scene)
    
 const sloader = new THREE.CubeTextureLoader();
 
@@ -70,26 +62,31 @@ const stexture = sloader.load([
 ]);
 
 scene.background = stexture;
-animate();
 
+// function create_copies(number, parent)
+// {
+//   let copies = new Array();
 
-function create_copies(number, parent)
+//   for(let i = 0; i < number; i++)
+//   {
+//     copies.push(parent.clone());
+//     scene.add(copies[i]);
+//   }
+//   return (copies);
+// }
+
+var parent = scene.getObjectByName('jupiter');
+console.log(parent);
+for(let i = 0; i < 10; i++)
 {
-  let copies = new Array();
-
-  for(let i = 0; i < number; i++)
-  {
-    copies[i] = parent.clone();
-    scene.add(copies[i]);
-  }
-  return (copies);
+  copies[i] = parent.clone();
+  scene.add(copies[i]);
 }
-
 
 let turnFraction = 0.5;
 let numPoints = 10;
 
-
+console.log(copies);
 for (let i = 0; i < numPoints; i++)
 {
   let dst = i / (numPoints - 1);
