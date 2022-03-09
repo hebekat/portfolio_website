@@ -33,10 +33,10 @@ const gridHelper = new THREE.GridHelper( size, divisions );
 
 const loader = new GLTFLoader();
 
-var copies = new Array(10);
+var copies = new Array(8);
 var model;
-
-
+var parent;
+//const light = new THREE.DirectionalLight(0xffffed);
 loader.load( 'dist/jupiter.glb', function ( gltf )
 {
     model = gltf.scene;  // model 3D object is loaded
@@ -44,10 +44,15 @@ loader.load( 'dist/jupiter.glb', function ( gltf )
     model.position.z = 0;
     model.position.x = 0;
     model.name = "jupiter";
+    model.add(new THREE.DirectionalLight(0xFFFFFF));
     scene.add(model);
+    copies = init(model);
+    boid(copies, 0.05);
+    animate();
+    //console.log(parent);
 }
 );
-
+//console.log(parent);
 //console.log(scene)
    
 const sloader = new THREE.CubeTextureLoader();
@@ -74,30 +79,37 @@ scene.background = stexture;
 //   }
 //   return (copies);
 // }
+//console.log(scene);
 
-var parent = scene.getObjectByName('jupiter');
-console.log(parent);
-for(let i = 0; i < 10; i++)
+
+let turnFraction = 1000;
+let numPoints = 100;
+
+function boid(copies, numPoints, turnFraction)
 {
-  copies[i] = parent.clone();
-  scene.add(copies[i]);
+  for (let i = 0; i < numPoints; i++)
+  {
+    let dst = i / (numPoints - 1);
+    let angle = 2 * Math.PI * turnFraction * i;
+    
+    copies[i].position.x = dst * Math.cos(angle) * 600;
+    copies[i].position.z = dst * Math.sin(angle) * 600;
+  }
 }
 
-let turnFraction = 0.5;
-let numPoints = 10;
-
-console.log(copies);
-for (let i = 0; i < numPoints; i++)
+function init(parent)
 {
-  let dst = i / (numPoints - 1);
-  let angle = 2 * Math.PI * turnFraction * i;
-  
-  copies[i].position.x = dst * Math.cos(angle);
-  copies[i].position.y = dst * Math.sin(angle);
+  for(let i = 0; i < numPoints; i++)
+  {
+    copies[i] = parent.clone();
+    scene.add(copies[i]);
+  }
+  boid(copies, copies.length, 0);
+  return (copies);
 }
-
 
 function animate() {
+    boid(copies, numPoints, turnFraction += 0.00001);
     requestAnimationFrame( animate );
     renderer.render( scene, camera );
     // model.position.x = Math.sin(xpos += 0.01) * 15;
@@ -106,4 +118,3 @@ function animate() {
 };
 
 
-animate();
