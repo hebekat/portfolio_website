@@ -33,7 +33,7 @@ const gridHelper = new THREE.GridHelper( size, divisions );
 
 const loader = new GLTFLoader();
 
-let numPoints = 100;
+let numPoints = 100000;
 var copies = new Array(numPoints);
 var model;
 
@@ -157,7 +157,7 @@ function boid(copies, numPoints, turnFraction)
 
 function point_boid(geometry, amount, turnFraction)
 {
-  const radius = 30;
+  const radius = 300;
 
   const positions = new Float32Array( amount * 3 );
   const colors = new Float32Array( amount * 3 );
@@ -177,7 +177,7 @@ function point_boid(geometry, amount, turnFraction)
     color.setHSL(Math.random()*255, Math.random()*255,Math.random()*255 );
     color.setRGB(Math.random()*255, Math.random()*255,Math.random()*255 );
     color.toArray( colors, i * 3 );
-    sizes[ i ] =  Math.sin(i) * Math.random();
+    sizes[ i ] =  Math.log(i) * 3;
   }
   geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
   geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
