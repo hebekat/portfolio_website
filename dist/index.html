@@ -3,6 +3,7 @@
 <html>
 	<head>
 	<canvas id="c"></canvas>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 		<script type="module" src="main.js"></script>
 		<base href="/">
 		<meta charset="utf-8">
@@ -13,7 +14,12 @@
 	</head>
 	<body>
 		<div id="container"></div>
-
+		<label for="baseslider">Base Coordinates</label>
+		<input type = "range" min="0" max="1000" value="0" step="1" id="baseslider"/>
+		<label for="randomMaxSlider">randomMaxSeed</label>
+		<input type = "range" min="0" max="300" value="0" step="1" id="randomMaxSlider"/>
+		<label for="radiusSlider">radius</label>
+		<input type = "range" min="0" max="300" value="0" step="1" id="radiusSlider"/>
 		<script type="x-shader/x-vertex" id="vertexshader">
 
 			attribute float size;
