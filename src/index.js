@@ -33,12 +33,12 @@ const gridHelper = new THREE.GridHelper( size, divisions );
 const sloader = new THREE.CubeTextureLoader();
 
 const stexture = sloader.load([
-  "dist/space/darkspace/image_part_003.jpg",
-  "dist/space/darkspace/image_part_005.jpg",
-  "dist/space/darkspace/image_part_006.jpg",
-  "dist/space/darkspace/image_part_007.jpg",
-  "dist/space/darkspace/image_part_008.jpg",
-  "dist/space/darkspace/image_part_011.jpg",
+  "dist/Nebula aklion/1.png",
+  "dist/Nebula aklion/3.png",
+  "dist/Nebula aklion/5.png",
+  "dist/Nebula aklion/6.png",
+  "dist/Nebula aklion/2.png",
+  "dist/Nebula aklion/4.png",
 ]);
 
 scene.background = stexture;
@@ -51,6 +51,10 @@ let radius = 300;
 let numPoints = baseCoords * randomSeedMax;
 
 var base_positions = new Float32Array( numPoints * 2);
+
+function generateRandomInt(min,max){
+  return (Math.random() * (max+1 -min)) +min;
+}
 
 function initPoints() {
 
@@ -79,14 +83,11 @@ const baseVertex = new THREE.Vector3();
 
 let randomCoords = new Float32Array( baseCoords * 3 );
 let basis = new THREE.Vector3();
-for(let i = 0; i < randomSeedMax; i++)
+for(let i = 0; i < totalAmount; i++)
 {
-  basis.x = Math.random() * -3;
-  basis.y = Math.random() * 5;
-  basis.z = Math.random() * -3;
-  basis.toArray(randomCoords, i * 3);
+  randomCoords[i] = generateRandomInt(-1.4, 1.4);
 }
-
+console.log(randomCoords);
 function move_point_boid(geometry, turnFraction)
 {
   //400 * 20max
@@ -104,6 +105,7 @@ function move_point_boid(geometry, turnFraction)
   const lerpedColor = new THREE.Color();
   let counterforhex = 0;
   let c2 = 0;
+  let rdcounter = 0;
 
   for (let i = 0; i < baseCoords; i++)
   {
@@ -111,15 +113,13 @@ function move_point_boid(geometry, turnFraction)
       let angle = 2 * Math.PI * turnFraction * i;
 
       baseVertex.x = dst * Math.cos(angle) * radius * 1.3;
-      baseVertex.y = 0.1;
       baseVertex.z = dst * Math.sin(angle) * radius * 1.3;
-      let rdcounter = 0;
+      
       for(let x = 0; x<randomSeedMax; x++)
       {
-          vertex.x = baseVertex.x - randomCoords[rdcounter];
-          vertex.y = baseVertex.y - randomCoords[rdcounter + 1];
-          vertex.z = baseVertex.z - randomCoords[rdcounter + 2];
-          rdcounter += 3;
+          vertex.x = baseVertex.x * randomCoords[rdcounter++];
+          vertex.y = baseVertex.y * randomCoords[rdcounter];
+          vertex.z = baseVertex.z * randomCoords[rdcounter];
           vertex.toArray( positions, i * 3 );
           if(i % 20 == 0 )
           {
@@ -144,6 +144,7 @@ function move_point_boid(geometry, turnFraction)
             lightblue.toArray( colors, i * 3 );
             sizes[ i ] =  60; 
           }
+
           geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
           geometry.setAttribute( 'customColor', new THREE.BufferAttribute( colors, 3 ) );
           geometry.setAttribute( 'size', new THREE.BufferAttribute( sizes, 1 ) );
